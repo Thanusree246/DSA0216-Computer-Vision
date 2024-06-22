@@ -1,0 +1,34 @@
+import cv2
+import numpy as np
+
+# Step 1: Read the input image
+image_path = r'C:\Users\HP\Pictures\Query.png'
+image = cv2.imread(image_path)
+
+# Step 2: Convert the image to grayscale
+gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+# Step 3: Apply the Sobel operator in the x and y directions
+sobel_x = cv2.Sobel(gray_image, cv2.CV_64F, 1, 0, ksize=3)  # Sobel in x direction
+sobel_y = cv2.Sobel(gray_image, cv2.CV_64F, 0, 1, ksize=3)  # Sobel in y direction
+
+# Step 4: Combine the gradients to get the edge magnitude
+sobel_combined = cv2.magnitude(sobel_x, sobel_y)
+
+# Normalize the result to fit in the range [0, 255] for display
+sobel_combined = cv2.normalize(sobel_combined, None, 0, 255, cv2.NORM_MINMAX)
+
+# Convert the combined gradient image to uint8 type
+sobel_combined = np.uint8(sobel_combined)
+
+# Step 5: Display and save the resulting edge-detected image
+sobel_image_path = 'sobel_edge_image.jpg'
+cv2.imwrite(sobel_image_path, sobel_combined)
+
+# Display the images
+cv2.imshow('Original Image', image)
+cv2.imshow('Sobel Edge Detected Image', sobel_combined)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+print(f'Sobel edge-detected image saved as {sobel_image_path}')
