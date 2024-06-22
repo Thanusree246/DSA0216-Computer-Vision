@@ -1,0 +1,32 @@
+import cv2
+
+# Step 1: Read the input image
+image_path = r'C:\Users\HP\Pictures\Query.png' 
+image = cv2.imread(image_path)
+
+# Check if the image was loaded correctly
+if image is None:
+    raise FileNotFoundError(f"No image found at the path: {image_path}")
+
+# Step 2: Convert the image to grayscale
+gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+# Step 3: Apply Gaussian blur to the grayscale image to reduce noise
+blurred_image = cv2.GaussianBlur(gray_image, (5, 5), 1.4)
+
+# Step 4: Apply the Canny edge detector
+low_threshold = 50
+high_threshold = 150
+edges = cv2.Canny(blurred_image, low_threshold, high_threshold)
+
+# Step 5: Display and save the resulting edge-detected image
+canny_image_path = 'canny_edge_image.jpg'
+cv2.imwrite(canny_image_path, edges)
+
+# Display the images
+cv2.imshow('Original Image', image)
+cv2.imshow('Canny Edge Detected Image', edges)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+print(f'Canny edge-detected image saved as {canny_image_path}')
