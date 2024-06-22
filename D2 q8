@@ -1,0 +1,23 @@
+import cv2
+import numpy as np
+
+# Load the source image
+source_image = cv2.imread(r"C:\Users\HP\Pictures\Screenshots\Screenshot (239).png")
+
+# Define the coordinates of the ROI (region of interest)
+x, y, width, height = 100, 150, 200, 250
+
+# Crop the ROI from the source image
+roi = source_image[y:y+height, x:x+width]
+
+# Example: Paste the ROI at a different location (offset from original)
+offset_x, offset_y = 300, 100
+source_image[offset_y:offset_y+height, offset_x:offset_x+width] = roi
+
+# Display the modified image
+cv2.imshow('Modified Image', source_image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+# Save the modified image
+cv2.imwrite('modified_image.jpg', source_image)
