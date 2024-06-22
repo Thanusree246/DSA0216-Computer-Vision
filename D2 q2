@@ -1,0 +1,29 @@
+import cv2
+
+image_path = (r'C:\Users\HP\Pictures\Screenshots\Screenshot (220).png') 
+image = cv2.imread(image_path)
+
+# Step 2: Convert the image to grayscale
+gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+# Step 3: Save the grayscale image
+gray_image_path = 'gray_image.jpg'
+cv2.imwrite(gray_image_path, gray_image)
+
+# Step 4: Mirror the lower half to the upper half
+height, width = gray_image.shape
+
+# Ensure the height is even for proper mirroring
+if height % 2 != 0:
+    gray_image = gray_image[:-1, :]  # Remove the last row if the height is odd
+    height -= 1
+
+lower_half = gray_image[height//2:, :]
+gray_image[:height//2, :] = cv2.flip(lower_half, 0)  # Flip the lower half and assign to upper half
+
+# Step 5: Save the final mirrored image
+mirrored_image_path = 'mirrored_image.jpg'
+cv2.imwrite(mirrored_image_path, gray_image)
+
+print(f'Grayscale image saved as {gray_image_path}')
+print(f'Mirrored image saved as {mirrored_image_path}')
