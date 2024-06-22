@@ -1,0 +1,46 @@
+import cv2
+import numpy as np
+
+# Step 1: Read the input image
+image_path = r'C:\Users\HP\Pictures\Query.png'
+image = cv2.imread(image_path)
+
+# Check if the image was loaded correctly
+if image is None:
+    raise FileNotFoundError(f"No image found at the path: {image_path}")
+
+# Step 2: Convert the image to grayscale
+gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+# Step 3: Apply the Prewitt operator in the x and y directions using custom kernels
+# Define the Prewitt kernels
+prewitt_kernel_x = np.array([[1, 0, -1], [1, 0, -1], [1, 0, -1]], dtype=np.float32)
+prewitt_kernel_y = np.array([[1, 1, 1], [0, 0, 0], [-1, -1, -1]], dtype=np.float32)
+
+# Convert the grayscale image to float32
+gray_image_float = np.float32(gray_image)
+
+# Apply the kernels to the grayscale image
+prewitt_x = cv2.filter2D(gray_image_float, cv2.CV_32F, prewitt_kernel_x)
+prewitt_y = cv2.filter2D(gray_image_float, cv2.CV_32F, prewitt_kernel_y)
+
+# Step 4: Combine the gradients to get the edge magnitude
+prewitt_combined = cv2.magnitude(prewitt_x, prewitt_y)
+
+# Normalize the result to fit in the range [0, 255] for display
+prewitt_combined = cv2.normalize(prewitt_combined, None, 0, 255, cv2.NORM_MINMAX)
+
+# Convert the combined gradient image to uint8 type
+prewitt_combined = np.uint8(prewitt_combined)
+
+# Step 5: Display and save the resulting edge-detected image
+prewitt_image_path = 'prewitt_edge_image.jpg'
+cv2.imwrite(prewitt_image_path, prewitt_combined)
+
+# Display the images
+cv2.imshow('Original Image', image)
+cv2.imshow('Prewitt Edge Detected Image', prewitt_combined)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+print(f'Prewitt edge-detected image saved as {prewitt_image_path}')
